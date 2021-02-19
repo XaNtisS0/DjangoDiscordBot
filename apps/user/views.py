@@ -23,15 +23,14 @@ class UsersViewSet(viewsets.ModelViewSet):
         new_user.save()
 
         for rank in data['ranks']:
-            try:
-                rank_obj = Rank.objects.get(name = rank['name'])
-                new_user.ranks.add(rank_obj)
-            except Rank.DoesNotExist:
-                new_rank = Rank.objects.create(name= rank['name'])
-                new_rank.save()
-                print(f'rank added with name {rank["name"]}')
-                new_user.ranks.add(new_rank)
+            rank_obj = Rank.objects.get_or_create(name = rank['name'])
+            new_user.ranks.add(rank_obj)
+
 
         serializer = UserSerializer(new_user)
 
         return Response(serializer.data)
+
+
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
