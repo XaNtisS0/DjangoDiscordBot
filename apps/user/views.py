@@ -3,7 +3,6 @@ from rest_framework.response import Response
 
 from .models import User
 from apps.rank.models import Rank
-from apps.server.models import Server
 
 
 class UserSerializer(serializers.ModelSerializer):
