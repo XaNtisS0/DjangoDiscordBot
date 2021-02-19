@@ -18,8 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('rank/', include('apps.rank.urls')),
-    # path('server/', include('apps.server.urls')),
-    # path('user/', include('apps.user.urls')),
-    # path('', include('rest_framework.urls'))
+    path('ranks/', include('apps.rank.urls')),
+    path('servers/', include('apps.server.urls')),
+    path('users/', include('apps.user.urls')),
 ]
