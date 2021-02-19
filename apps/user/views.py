@@ -1,26 +1,32 @@
-# from rest_framework import serializers, viewsets
-# from rest_framework.response import Response
+from rest_framework import serializers, viewsets
+from rest_framework.response import Response
 
-# from .models import User
-# from ..rank.models import Rank
-
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = '__all__'
+from .models import User
+from apps.rank.models import Rank
+from apps.server.models import Server
 
 
-# class UsersViewSet(viewsets.ModelViewSet):
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+        depth = 1
 
 
-# class UserRanksViewSet(viewsets.ModelViewSet):
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
+class UsersViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
 
-#     def list(self, request, user_id):
-#         ranks = Rank.objects.filter(users__rank=user_id)
-#         serializer = self.get_serializer(ranks, many=True)
-#         return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        data = request.data
+
+        new_user = User.objects.create(username=data['username'])
+        new_user.save()
+
+        for rank in data['ranks']:
+            rank_obj = Rank.objects.get(name = rank['name'])
+            new_user.ranks.add(rank_obj)
+
+        serializer = UserSerializer
+
+        return Response(serializer.data)
