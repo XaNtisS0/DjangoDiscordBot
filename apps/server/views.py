@@ -26,6 +26,6 @@ class ServersViewSet(viewsets.ModelViewSet):
             user_obj = User.objects.get(username = user['username'])
             new_server.users.add(user_obj)
 
-        serializer = ServerSerializer
+        serializer = ServerSerializer(new_server)
             
         return Response(serializer.data)
